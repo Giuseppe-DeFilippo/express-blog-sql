@@ -16,20 +16,15 @@ function index(req, res) {
 
 function show(req, res) {
     const id = parseInt(req.params.id);
-    // const post = lista.find((post) => id === post.id);
-    // if (post === undefined) {
-    //     res.status(404).send("è un errore")
-    // } else { res.json(post) }
     const sql = "SELECT * FROM `posts` WHERE `id` = ?";
     connection.query(sql, [id], (err, results) => {
         if (err) return res.status(500).json({ error: "database query failed" });
         const item = results[0];
         if (!item) {
-            throw new CustomError("l elemento non esiste", 404);
+            return res.status(404).json({ error: "errore non ce" })
         }
         res.json({ success: true, item })
-    })
-
+    });
 }
 function create(req, res) {
     const nuovoPost = req.body;
@@ -53,14 +48,17 @@ function update(req, res) {
 }
 function elimina(req, res) {
     const id = parseInt(req.params.id);
-    let indice = lista.indexOf(lista.find((post) => id === post.id));
-    console.log(lista);
-    if (indice === -1) {
-        res.status(404).send("è un errore")
-    } else {
-        lista.splice(indice, 1);
-        res.status(204).send()
-    };
+    const sql = "DELETE  FROM `posts` WHERE `id` = ?";
+    connection.query(sql, [id], (err, results) => {
+        if (err) {
+            console.error("errore nella query", err);
+            return res.status(500).json({ error: "database  failed" })
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: "non esiste il post" });
+        }
+        res.sendStatus(204).json({ message: "eliminato correttamente" })
+    });
 }
 function tagSearch(req, res) {
     const tagScelto = (req.params.tag);
