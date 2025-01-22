@@ -14,10 +14,10 @@ app.use(express.static("public"));
 app.use(cors());
 
 console.log('ciao');
-app.get("/", (req, res) => {
-    console.log('dsa');
-    res.send('Hello World!')
-});
+// app.get("/prova", (req, res) => {
+//     console.log('dsa');
+//     res.send('Hello World!')
+// });
 app.use("/api/post", postRouter);
 
 app.listen(PORT, () => {

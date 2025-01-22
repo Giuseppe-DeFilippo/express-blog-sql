@@ -20,7 +20,15 @@ function show(req, res) {
     // if (post === undefined) {
     //     res.status(404).send("è un errore")
     // } else { res.json(post) }
-    const sql = "SELECT * FROM ``"
+    const sql = "SELECT * FROM `posts` WHERE `id` = ?";
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: "database query failed" });
+        const item = results[0];
+        if (!item) {
+            throw new CustomError("l elemento non esiste", 404);
+        }
+        res.json({ success: true, item })
+    })
 
 }
 function create(req, res) {
